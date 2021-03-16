@@ -1,0 +1,476 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+##Bouées
+
+###############################################################################
+
+# 1 point par bouée valide dans le port 
+# 1 point supplémentaire par bouée valide sur la ligne de chenal de la même couleur 
+# 2 points par paires de bouées valides sur les lignes de chenaux d’un même port. Une paire valide est composée d’une bouée verte et d’une bouée rouge 
+
+##Manches à air
+
+###############################################################################
+
+#5 points si une seule manche à air est relevée à la fin du match 
+# 15 points si les deux manches à air sont relevées en fin de match 
+
+
+
+
+###############################################################################
+##piste
+###############################################################################
+
+#A SUPPR, uniquement pour affichage python
+x_size = (0,3000,3000,0,0)
+y_size = (0,0,2000,2000,0)
+
+
+##Port
+"""
+port_vert_g = ((0,1085), 
+             (400,1085))
+port_rouge_g = ((0,515), 
+             (400,515))
+port_rouge_d = ((2600,1085), 
+             (3000,1085))
+port_vert_d = ((2600,300), 
+             (515,515))
+"""
+
+#A SUPPR, uniquement pour affichage python
+x_vert_g = [0, 400]
+y_vert_g = [1085, 1085]
+x_rouge_g = [0, 400]
+y_rouge_g = [515, 515]
+
+x_rouge_d = [2600, 3000]
+y_rouge_d = [1085, 1085]
+x_vert_d = [2600, 3000]
+y_vert_d = [515, 515]
+        
+
+
+##phare
+#A SUPPR, uniquement pour affichage python
+x_coord_phare_g = [225]
+y_coord_phare_g = [-111]  
+
+x_coord_phare_d = [2775]
+y_coord_phare_d = [-111]  
+
+
+
+##bouées
+
+coord_bouées_g = (
+                #int
+                (300,400,'r'),
+                (300,1200,'g'),
+                (450,510,'g'),
+                (450,1080,'r'),
+                (700,100,'r'),
+                (950,400,'g'), 
+                (1010,800,'r'),
+                (1270,1200,'g'),
+                (1005,1955,'r'),
+                (1065,1650,'g'), 
+                (1355,1650,'r'),
+                (1395,1955,'g'),
+        
+                #ext
+                (-67,1450,'r'),
+                (-67,1525,'g'),
+                (-67,1600,'r'), 
+                (-67,1675,'g'),
+                (-67,1750,'r'))
+
+coord_bouées_d = (
+                #int
+                (1730,1200,'r'),
+                (2000,800,'g'),
+                (2050,400,'r'),
+                (2330,100,'g'),
+                (2550,510,'r'),
+                (2550,1080,'g'), 
+                (2700,400,'g'),
+                (2700,1200,'r'),
+                (1605,1955,'r'),
+                (1665,1650,'g'), 
+                (1935,1650,'r'),
+                (1995,1955,'g'),
+                #ext
+                (3067,1450,'g'),
+                (3067,1525,'r'),
+                (3067,1600,'g'), 
+                (3067,1675,'r'),
+                (3067,1750,'g'))
+
+#A SUPPR, uniquement pour affichage python      
+x_red_g = [300, 450, 700, 1010, 1005, 1355, -67, -67, -67]
+y_red_g = [400, 1080, 100, 800, 1955, 1650, 1450, 1600, 1750]
+x_green_g = [300, 450, 950, 1270, 1065, 1395, -67, -67]
+y_green_g = [1200, 510, 400, 1200, 1650, 1955, 1525, 1675]
+
+
+x_red_d = [1730, 2050, 2550, 2700, 1605, 1935, 3067, 3067]
+y_red_d = [1200, 400, 510, 1200, 1955, 1650, 1525, 1675]
+x_green_d = [2000, 2330, 2550, 2700, 1665, 1995, 3067, 3067, 3067]
+y_green_d = [800, 100, 1080, 400, 1650, 1955, 1450, 1600, 1750]
+        
+##bouées
+
+coord_eceuil_g = (
+    #ext
+    (700,-67),
+    (775,-67),
+    (850,-67), 
+    (925,-67),
+    (1000,-67))
+
+coord_eceuil_d = (
+    #ext
+    (2000,-67),
+    (2075,-67),
+    (2150,-67), 
+    (2225,-67),
+    (2300,-67))
+
+#A SUPPR, uniquement pour affichage python
+x_ec_g = [700, 775, 850, 925, 1000]
+y_ec_g = [-67, -67, -67, -67, -67]
+x_ec_d = [2000, 2075, 2150, 2225, 2300]
+y_ec_d = [-67, -67, -67, -67, -67]
+
+##manches à air 
+coord_manches_g = (
+                #int
+                (230,2022,'off','equipe_A'),
+                (635,2022,'off','equipe_A'),
+                )
+coord_manches_d = (
+                #int,
+                (2365,2022,'off','equipe_B'),
+                (2770,2022,'off','equipe_B')
+                )
+x_m_g = []
+y_m_g = []
+x_m_d = []
+y_m_d = []
+for i in range (len(coord_manches_d)):
+    x_m_g.append(coord_manches_g[i][0])
+    y_m_g.append(coord_manches_g[i][1])
+    x_m_d.append(coord_manches_d[i][0])
+    y_m_d.append(coord_manches_d[i][1])
+    
+
+#ensembles des points d'intérêts
+taches = coord_bouées_g 
+taches_coord = list(taches) 
+    
+
+
+###############################################################################
+##robot
+###############################################################################
+
+r = 30 #[cm]
+x_coord_robot = 200
+y_coord_robot = 800
+v_robot = 0.24 #[m/s]
+G_robot = 90 #[deg]
+
+direction_robot_x = [x_coord_robot, x_coord_robot + 100*np.sin(G_robot*np.pi/180) ]
+direction_robot_y = [y_coord_robot, y_coord_robot + 100*np.cos(G_robot*np.pi/180) ]
+
+bras_devant = np.array((0,0,0))
+bras_derriere =  np.array((0,0,0))
+
+###############################################################################
+##fonction
+###############################################################################
+
+
+
+#Calcul la distance de tous les objectifs et sélectionne le plus proches
+def proximite_robot(taches):
+    mini = (10000,0)
+    list_dist = []
+    for i in range (len(taches_coord)):
+        
+        taches_coord_x = taches_coord[i][0]
+        taches_coord_y = taches_coord[i][1]
+        
+        D = np.sqrt( (taches_coord_x - x_coord_robot)**2 + (taches_coord_y - y_coord_robot)**2 ) - 120
+        list_dist.append((D,i))
+        if D <= mini[0]:
+            mini = (D,i)
+            print(D,i, 'distmin')
+    print(list_dist)
+    j = mini[1]
+    plt.scatter(taches_coord[j][0], taches_coord[j][1], color='violet', s= 150 )
+    return mini, taches_coord[j][0], taches_coord[j][1]
+
+
+#calcul le temps de trajet voir le pts de coordonnées Xfinal, Yfinal
+def temps_trajet(T,Xfinal, Yfinal):
+    D = np.sqrt( (Xfinal - x_coord_robot)**2 + (Yfinal - y_coord_robot)**2 ) - 120
+    T += (D/(1000*v_robot))
+    return T
+    
+    
+#Simule le temps de rotation du robot pour inverser les bras
+def tourner_180(T,bras_devant, bras_derriere, G_robot):
+    temp = bras_devant
+    bras_devant = bras_derriere
+    bras_derriere = temp 
+    return T+5, bras_devant, bras_derriere, G_robot 
+
+
+
+#Simule le changement d'orientation du robot
+def orientation(T,x_coord_robot, y_coord_robot, Xfinal, Yfinal):
+    return T+3 , np.arctan2((Xfinal - x_coord_robot), (Yfinal - y_coord_robot) ) * (180/np.pi)
+
+#Simule l'avancé du robot
+def avance(T,x_coord_robot, y_coord_robot, Xfinal, Yfinal, G_robot ):
+    D = np.sqrt( (Xfinal - x_coord_robot)**2 + (Yfinal - y_coord_robot)**2 )
+    T, G_deg = orientation(T,x_coord_robot, y_coord_robot, Xfinal, Yfinal)
+    while D > 120:
+        T += 1
+        x_coord_robot += 240*np.sin(G_deg * (np.pi/180))
+        y_coord_robot += 240*np.cos(G_deg * (np.pi/180))
+        D = np.sqrt( (Xfinal - x_coord_robot)**2 + (Yfinal - y_coord_robot)**2 )
+        print_piste(x_coord_robot, y_coord_robot, G_robot)
+        plt.savefig('T  '+str(T))
+    return T, x_coord_robot, y_coord_robot
+
+
+#Simule la prise d'une bouée
+def prendre(T, x_coord_robot, y_coord_robot, bras_devant, bras_derriere, G_robot ):
+    max = 6
+    if bras_devant[0]+bras_devant[1]+bras_devant[2] ==3:
+        T, bras_devant, bras_derriere, G_robot = tourner_180(T,bras_devant, bras_derriere, G_robot)
+    if bras_devant[1]==0:
+        bras_devant[1] += 1
+    else:
+        if bras_devant[0]==0:
+            bras_devant[0] += 1
+        else:
+            if bras_devant[2]==0:
+                bras_devant[2] +=  1
+                 
+    if bras_devant[0]+bras_devant[1]+bras_devant[2] + bras_derriere[0]+bras_derriere[1]+bras_derriere[2] == max:
+        T, x_coord_robot, y_coord_robot, bras_devant, bras_derriere = retour_pos_depart(T, x_coord_robot, y_coord_robot, bras_devant, bras_derriere )
+
+    return T+5, x_coord_robot, y_coord_robot, bras_devant, bras_derriere, G_robot
+
+
+#Simule la dépose d'une bouée
+def dépose(T, x_coord_robot, y_coord_robot, bras_devant, bras_derriere ):
+    if bras_devant[0]+bras_devant[1]+bras_devant[2] ==0:
+        T, bras_devant, bras_derriere = tourner_180(T,bras_devant, bras_derriere)
+        
+    if bras_devant[1]==1:
+        bras_devant[1] -= 1
+    else:
+        if bras_devant[0]==1:
+            bras_devant[0] -= 1
+        else:
+            if bras_devant[2]==1:
+                bras_devant[2] -=  1
+    return T+5, x_coord_robot, y_coord_robot, bras_devant, bras_derriere
+
+
+#Simule le temps de retour à la position de départ 
+def retour_pos_depart(T, x_coord_robot, y_coord_robot, bras_devant, bras_derriere):
+    D = np.sqrt( (200 - x_coord_robot)**2 + (800 - y_coord_robot)**2 )
+    T_retour = (D/(1000*v_robot))
+    if T + T_retour <= 97:
+        print(T + T_retour,"dans les temps")
+        T, G_robot = orientation(T,x_coord_robot, y_coord_robot, 200,800)
+        T, x_coord_robot, y_coord_robot = avance(T,x_coord_robot, y_coord_robot, 200,800, G_robot )
+    else:
+        print(T + T_retour,"pas arrivé dans les temps")
+    return T, 200, 800, np.array((0,0,0)), np.array((0,0,0))
+
+
+# affiche la piste
+def print_piste(x_coord_robot, y_coord_robot, G_robot):
+    ##piste
+    plt.figure()
+    plt.grid()
+    plt.xlabel('x')
+    plt.ylabel('y') 
+    plt.plot(x_size, y_size, color='black')
+    plt.plot(x_vert_g, y_vert_g, color='green')
+    plt.plot(x_rouge_g, y_rouge_g, color='red')
+    plt.plot(x_vert_d, y_vert_d, color='green')
+    plt.plot(x_rouge_d, y_rouge_d, color='red')
+    
+    ##bouées
+    plt.scatter(x_red_g, y_red_g, color='red')
+    plt.scatter(x_green_g, y_green_g, color='green')
+    plt.scatter(x_red_d, y_red_d, color='red')
+    plt.scatter(x_green_d, y_green_d, color='green')
+    
+    ##ec
+    plt.scatter(x_ec_g, y_ec_g, color='grey')
+    plt.scatter(x_ec_d, y_ec_d, color='grey')
+    ##manches à air
+    plt.scatter(x_m_g, y_m_g, color='blue', s= 115 )
+    plt.scatter(x_m_d, y_m_d, color='red', s= 115 )
+    ##phare
+    plt.scatter(x_coord_phare_g, y_coord_phare_g, color='blue', s= 450)
+    plt.scatter(x_coord_phare_d, y_coord_phare_d, color='red', s= 450)
+    ##robot
+    plt.scatter(x_coord_robot, y_coord_robot, color='orange', s= 300 )
+    plt.arrow(x_coord_robot, y_coord_robot,100*np.sin(G_robot*np.pi/180), 100*np.cos(G_robot*np.pi/180) )
+    return
+
+
+###############################################################################
+##Fonctions des tâches à accomplir
+###############################################################################
+
+
+
+def manches_à_air(T, x_coord_robot, y_coord_robot, G_robot):
+    #manches à air gauches (15pts)
+    #orienté
+    T, G_robot = orientation(T, x_coord_robot, y_coord_robot, x_coord_robot, 1880)
+    print_piste(x_coord_robot, y_coord_robot, G_robot)
+    plt.savefig('T  '+str(T))
+    #avancé
+    T, x_coord_robot, y_coord_robot = avance(T,x_coord_robot, y_coord_robot, x_coord_robot, 1880, G_robot )
+    #levé bras hauteur max
+    T += 2
+    print_piste(x_coord_robot, y_coord_robot, G_robot)
+    plt.savefig('T  '+str(T))
+    #orienté
+    T, G_robot = orientation(T, x_coord_robot, y_coord_robot, 670, y_coord_robot)
+    print_piste(x_coord_robot, y_coord_robot, G_robot)
+    plt.savefig('T  '+str(T))
+    #bras hauteur min
+    T += 2
+    print_piste(x_coord_robot, y_coord_robot, G_robot)
+    plt.savefig('T  '+str(T))
+    #recul
+    T, x_coord_robot, y_coord_robot = avance(T,x_coord_robot, y_coord_robot, 670, y_coord_robot, G_robot )
+    print(T, 'temps manches_à_air')
+    return T, x_coord_robot, y_coord_robot, G_robot
+
+#drapeau (auto)
+
+def bouées_échouées (T, x_coord_robot, y_coord_robot, G_robot, bras_devant, bras_derriere ):
+    #bouées échouées 
+    #orienté
+    T, G_robot = orientation(T, x_coord_robot, y_coord_robot, 120, 1525)
+    print_piste(x_coord_robot, y_coord_robot, G_robot)
+    plt.savefig('T  '+str(T))
+    #avancé
+    T, x_coord_robot, y_coord_robot = avance(T,x_coord_robot, y_coord_robot, 120, 1525, G_robot)
+    #orienté
+    T, G_robot = orientation(T, x_coord_robot, y_coord_robot, 0, 1525)
+    print_piste(x_coord_robot, y_coord_robot, G_robot)
+    plt.savefig('T  '+str(T))
+    #prendre
+    T, x_coord_robot, y_coord_robot, bras_devant, bras_derriere,  G_robot = prendre(T, x_coord_robot, y_coord_robot, bras_devant, bras_derriere, G_robot)
+    T, x_coord_robot, y_coord_robot, bras_devant, bras_derriere,  G_robot = prendre(T, x_coord_robot, y_coord_robot, bras_devant, bras_derriere, G_robot)
+    T, x_coord_robot, y_coord_robot, bras_devant, bras_derriere,  G_robot = prendre(T, x_coord_robot, y_coord_robot, bras_devant, bras_derriere, G_robot)
+    #orienté
+    T, G_robot = orientation(T, x_coord_robot, y_coord_robot, 120, 1675)
+    print_piste(x_coord_robot, y_coord_robot, G_robot)
+    plt.savefig('T  '+str(T))
+    #avancé
+    T, x_coord_robot, y_coord_robot = avance(T,x_coord_robot, y_coord_robot, 120, 1675, G_robot)
+    #orienté
+    T, G_robot = orientation(T, x_coord_robot, y_coord_robot, 0, 1675)
+    print_piste(x_coord_robot, y_coord_robot, G_robot)
+    plt.savefig('T  '+str(T))
+    #prendre
+    T, x_coord_robot, y_coord_robot, bras_devant, bras_derriere,  G_robot = prendre(T, x_coord_robot, y_coord_robot, bras_devant, bras_derriere, G_robot)
+    T, x_coord_robot, y_coord_robot, bras_devant, bras_derriere,  G_robot = prendre(T, x_coord_robot, y_coord_robot, bras_devant, bras_derriere, G_robot)
+    #orienté
+    T, G_robot = orientation(T, x_coord_robot, y_coord_robot, 775, 120)
+    print_piste(x_coord_robot, y_coord_robot, G_robot)
+    plt.savefig('T  '+str(T))
+    #orienté
+    T, G_robot = orientation(T, x_coord_robot, y_coord_robot, 775, 0)
+    print_piste(x_coord_robot, y_coord_robot, G_robot)
+    plt.savefig('T  '+str(T))
+    #avancé
+    T, x_coord_robot, y_coord_robot = avance(T,x_coord_robot, y_coord_robot, 775, 120, G_robot)
+    #orienté
+    T, G_robot = orientation(T, x_coord_robot, y_coord_robot, 775, 2000)
+    print_piste(x_coord_robot, y_coord_robot, G_robot)
+    plt.savefig('T  '+str(T))
+    #avancé
+    T, x_coord_robot, y_coord_robot = avance(T,x_coord_robot, y_coord_robot, 925, 120, G_robot)
+    print(T, "bouées échouées ")
+    return T, x_coord_robot, y_coord_robot, G_robot, bras_devant, bras_derriere
+
+def phare(T, x_coord_robot, y_coord_robot, G_robot):
+    #Phares (10pts)
+    #orienté
+    T, G_robot = orientation(T, x_coord_robot, y_coord_robot, 225, 120)
+    print_piste(x_coord_robot, y_coord_robot, G_robot)
+    plt.savefig('T  '+str(T))
+    #avancé
+    T, x_coord_robot, y_coord_robot = avance(T,x_coord_robot, y_coord_robot, 225, 120, G_robot )
+    print_piste(x_coord_robot, y_coord_robot, G_robot)
+    plt.savefig('T  '+str(T))
+    print(T, "temps phare")
+    return T, x_coord_robot, y_coord_robot, G_robot
+
+def proxi (T, x_coord_robot, y_coord_robot, G_robot, bras_devant, bras_derriere):
+    #objectif le plus proche
+    print(T, 'début recherche bouées')
+    while T < 300:
+        mini, taches_coord_x, taches_coord_y = proximite_robot(taches)
+        D, j = mini
+        taches_coord.pop(j)
+        T, G_robot = orientation(T, x_coord_robot, y_coord_robot, taches_coord_x, taches_coord_y)
+        T, x_coord_robot, y_coord_robot = avance(T,x_coord_robot, y_coord_robot, taches_coord_x, taches_coord_y, G_robot)
+        T, x_coord_robot, y_coord_robot, bras_devant, bras_derriere,  G_robot = prendre(T, x_coord_robot, y_coord_robot, bras_devant, bras_derriere, G_robot)
+        print("bras_devant", bras_devant)
+        print("bras_derriere", bras_derriere)
+        print(T)
+        print_piste(x_coord_robot, y_coord_robot, G_robot)
+        plt.savefig('T  '+str(T))
+    print(T, 'fin recherche bouées')
+    return T, x_coord_robot, y_coord_robot, G_robot, bras_devant, bras_derriere
+    
+
+
+###############################################################################
+##partie
+###############################################################################
+
+#etat initial
+T = 0 #[s]
+print_piste(x_coord_robot, y_coord_robot, G_robot)
+
+
+#action
+"""
+T, x_coord_robot, y_coord_robot, G_robot = manches_à_air(T, x_coord_robot, y_coord_robot, G_robot)
+
+T, x_coord_robot, y_coord_robot, G_robot, bras_devant, bras_derriere = bouées_échouées (T, x_coord_robot, y_coord_robot, G_robot, bras_devant, bras_derriere )
+
+T, x_coord_robot, y_coord_robot, G_robot = phare(T, x_coord_robot, y_coord_robot, G_robot)
+"""
+T, x_coord_robot, y_coord_robot, G_robot, bras_devant, bras_derriere = proxi (T, x_coord_robot, y_coord_robot, G_robot, bras_devant, bras_derriere)
+"""
+
+#retour
+print(T)
+T, x_coord_robot, y_coord_robot, bras_devant, bras_derriere = retour_pos_depart(T, x_coord_robot, y_coord_robot, bras_devant, bras_derriere )
+print_piste(x_coord_robot, y_coord_robot, G_robot)   
+print(T)
+plt.savefig('T '+str(T))
+"""
+
+
